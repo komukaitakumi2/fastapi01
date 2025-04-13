@@ -53,6 +53,11 @@ async def get_user_by_id(user_id: int):
         raise HTTPException(status_code=404, detail="User not found")
     return user
 
+@app.get("/")
+def root():
+    return {"message": "Welcome to HOLLA backend!"}
+
+
 # POST: ユーザー登録
 @app.post("/users", response_model=UserOut)
 async def create_user(user: UserIn):
@@ -60,9 +65,6 @@ async def create_user(user: UserIn):
     user_id = await database.execute(query)
     return {**user.dict(), "id": user_id}
 
-@app.get("/")
-def root():
-    return {"message": "Welcome to HOLLA backend!"}
 
 @app.put("/users/{user_id}", response_model=UserOut)
 async def update_user(user_id: int, user: UserIn):
