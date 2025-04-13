@@ -24,11 +24,14 @@ metadata.create_all(engine)
 
 # Pydanticモデル（入力と出力）
 class UserIn(BaseModel):
-    name: str
+    name: str #<=clientの送ってくる[name]は、str型出なくてはならない
 
 class UserOut(BaseModel):
-    id: int
-    name: str
+    id: int #APIの返すidはintでなければならない
+    name: str #,,,はstrでなければならない
+
+
+##############エンドポイント###############
 
 # 接続処理
 @app.on_event("startup")
@@ -44,6 +47,19 @@ async def shutdown():
 async def get_users():
     query = users.select()
     return await database.fetch_all(query)
+#[リクエスト：URLにユーザーIDを入れる（例：/users/1）
+ # {レスポンス
+  #  "id": 1,
+   # "name": "たくみ"
+  #},
+  #{
+   # "id": 2,
+  #  "name": "あやの"
+  #}
+#]
+#{エラー時
+ # "detail": "User not found"
+#}
 
 @app.get("/users/{user_id}", response_model=UserOut)#(ユーザ個別情報)
 async def get_user_by_id(user_id: int):
@@ -52,6 +68,10 @@ async def get_user_by_id(user_id: int):
     if user is None:
         raise HTTPException(status_code=404, detail="User not found")
     return user
+#{
+#  "id": 1,
+#  "name": "たくみ"
+#}
 
 @app.get("/")
 def root():
@@ -64,6 +84,14 @@ async def create_user(user: UserIn):
     query = users.insert().values(name=user.name)
     user_id = await database.execute(query)
     return {**user.dict(), "id": user_id}
+#{リクエスト
+#  "name": "たくみ"
+#}
+
+#{レスポンス：idと一緒に返される
+#  "id": 3,
+#  "name": "たくみ"
+#}
 
 
 @app.put("/users/{user_id}", response_model=UserOut)
@@ -80,6 +108,21 @@ async def update_user(user_id: int, user: UserIn):
 
     # 更新後の情報を取得して返す
     return {**user.dict(), "id": user_id}
+#リクエスト
+#URLにID, ボディに新しい名前
+# PUT /users/3
+#{
+ # "name": "たくみ（改）"
+#}
+
+#レスポンス
+#{
+ # "id": 3,
+ # "name": "たくみ（改）"
+#}
+#
+#
+#
 
 @app.delete("/users/{user_id}", response_model=UserOut)
 async def delete_user(user_id: int):
@@ -95,3 +138,9 @@ async def delete_user(user_id: int):
 
     # 削除前のデータを返す（確認用）
     return existing_user
+#リクエスト：URLに削除対象のIDを指定
+#レスポンス
+#{
+ # "id": 3,
+  #"name": "たくみ（改）"
+#}
