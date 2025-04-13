@@ -5,8 +5,10 @@ from databases import Database
 from fastapi import HTTPException
 app = FastAPI()
 
+#サーバー起動中にcurl http://localhost:8000/users でuserリスト確認
+
 # DB接続設定（SQLite使用）
-DATABASE_URL = "sqlite:///./test.db"
+DATABASE_URL = "sqlite:///./test.db"#ディレクトリにtest.dbが作成される。ここにDB本体が入っている。
 database = Database(DATABASE_URL)
 metadata = MetaData()
 
@@ -16,11 +18,12 @@ users = Table(
     metadata,
     Column("id", Integer, primary_key=True),
     Column("name", String, nullable=False),
+    Column("hashed_password", String, nullable=False),#nullable
 )
 
 # DBエンジン（テーブル作成用）
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
-metadata.create_all(engine)
+metadata.create_all(engine) ##これでDBを起動している
 
 # Pydanticモデル（入力と出力）
 class UserIn(BaseModel):
