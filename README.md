@@ -37,3 +37,37 @@ SECRET_KEY=your_super_secret_key_here
 ### 5 サーバーの起動
 poetry run uvicorn main:app --reload
 
+---
+
+## 🐳 Docker 対応（任意）
+
+FastAPIをコンテナで動かしたい場合は以下の手順でOK！
+
+---
+
+### ⑥ Docker Desktop をインストール（Macの場合）
+
+[https://www.docker.com/products/docker-desktop/](https://www.docker.com/products/docker-desktop/)
+
+---
+
+### ⑦ Dockerfile の作成
+
+プロジェクトルートに `Dockerfile` を作成：
+
+```dockerfile
+FROM python:3.12-slim
+
+WORKDIR /app
+
+ENV POETRY_VIRTUALENVS_CREATE=false
+
+RUN pip install --upgrade pip && \
+    pip install poetry
+
+COPY pyproject.toml poetry.lock* ./
+RUN poetry install --no-root
+
+COPY . .
+
+CMD ["poetry", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
