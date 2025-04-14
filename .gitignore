@@ -1,3 +1,5 @@
+#このファイルは、Gitに対してここに追加されたファイルを無視するようにするファイルです。
+
 # Python
 __pycache__/
 *.pyc
@@ -9,4 +11,4 @@ __pycache__/
 .vscode/
 
 # OSゴミファイル
-.DS_Store
+.DS_Store.env

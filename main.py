@@ -12,9 +12,17 @@ from passlib.context import CryptContext
 from jose import JWTError, jwt
 from datetime import datetime, timedelta
 
-SECRET_KEY = "supersecretkey"  # 本番では環境変数から読み込むこと！
+#secret key の環境変数から読み取り################################################
+from dotenv import load_dotenv
+import os
+load_dotenv()
+SECRET_KEY = os.getenv("SECRET_KEY")
+if not SECRET_KEY:
+    raise RuntimeError("SECRET_KEY is not set in environment variables!")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
+###############################################################################
+
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")  # Swagger UIが認識するログイン先
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")  # パスワードハッシュ用
