@@ -44,9 +44,9 @@ poetry run uvicorn main:app --reload
 ```
 ---
 
-## 🐳 Docker 対応（任意）
+## 🐳 Docker 対応
 
-FastAPIをコンテナで動かしたい場合は以下の手順でOK！
+FastAPIをコンテナで動かす
 
 ---
 
@@ -128,3 +128,22 @@ CMD ["poetry", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "800
 docker compose up --build
 ```
 起動後、ブラウザで http://localhost:8000/docs にアクセスして確認。
+
+## 🔐 JWT 認証の使い方
+
+FastAPIはOAuth2 + JWTを使ったログイン認証をサポートしています。  
+以下の手順でトークンの取得と認証付きエンドポイントの利用ができます。
+
+---
+
+### ① ユーザー登録（`/register`）
+
+エンドポイント：`POST /register`  
+リクエストボディの例：
+
+```json
+{
+  "name": "takumi",
+  "password": "secretpass"
+}
+```
