@@ -102,7 +102,7 @@ COPY . .
 CMD ["poetry", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
 ```
 
-#### ⑨ docker-compose.yml の作成
+### ⑨ docker-compose.yml の作成
 プロジェクトルートに Dockerfile を作成：
 ```dockerfile
 FROM python:3.12-slim
@@ -122,7 +122,7 @@ COPY . .
 CMD ["poetry", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
 ```
 
-###➓Dockerで起動
+### ➓Dockerで起動
 以下のコマンドでFastAPIコンテナをビルド＆起動
 ```bash
 docker compose up --build
