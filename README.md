@@ -23,20 +23,25 @@ JWT認証、SQLiteによるユーザー管理、Dockerによる環境構築な�
 
 ```bash
 pip install poetry
+```
 
 ### ２ pythonのバージョン切り替え
+```bash
 pyenv install 3.12.7
 pyenv local 3.12.7
-
+```
 ### 3 仮想環境の作成と依存関係のインストール
+```bash
 poetry install
-
+```
 ### 4 Gitにあげるな！！秘密鍵のファイルを生成。.gitignoreに.envを追加
+```bash
 SECRET_KEY=your_super_secret_key_here
-
+```
 ### 5 サーバーの起動
+```bash
 poetry run uvicorn main:app --reload
-
+```
 ---
 
 ## 🐳 Docker 対応（任意）
@@ -71,3 +76,4 @@ RUN poetry install --no-root
 COPY . .
 
 CMD ["poetry", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+```
