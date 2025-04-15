@@ -13,7 +13,7 @@ from jose import JWTError, jwt
 from datetime import datetime, timedelta
 
 #secret key の環境変数から読み取り################################################
-from dotenv import load_dotenv
+from dotenv import load_dotenv #.envファイルを読み取るためのimport
 import os
 load_dotenv()
 SECRET_KEY = os.getenv("SECRET_KEY")
@@ -29,22 +29,30 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")  # パスワ�
 
 app = FastAPI()
 
-DATABASE_URL = "sqlite:///./test.db"
+DATABASE_URL = "sqlite:///./test.db"#同じディレクトリ内のtest.dbファイル
 database = Database(DATABASE_URL)
-metadata = MetaData()
+metadata = MetaData()#metadataを生成
 
-# usersテーブル定義（id, name, hashed_password）
+# usersテーブル定義（id, name, hashed_password）適宜追加可能
 users = Table(
     "users",
-    metadata,
+    metadata,#metadataとは、tableの情報を保持するための変数。ここに、Columnの情報等が入っている。ここでは、usersというTableをmetadataに格納している
     Column("id", Integer, primary_key=True),
     Column("name", String, nullable=False),
     Column("hashed_password", String, nullable=False),
 )
 
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
-metadata.create_all(engine)
+#実際にDBと通信するための接続機
+#SQliteからPostgreSQLに切り替える時は、（connect_argsは不要）
+#engine = create_engine("postgresql://user:pass@localhost/dbname")に変える
 
+
+metadata.create_all(engine)#ここで、metadataに格納されているすべてのTableを読み取り、DBを構築する
+
+
+
+####fastAPIが受け取り、返す型を定義している
 class UserCreate(BaseModel):  # 登録用
     name: str
     password: str
